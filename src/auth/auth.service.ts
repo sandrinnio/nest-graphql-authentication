@@ -5,6 +5,7 @@ import { UserRepository } from './user.repository';
 import { SignUpArgs } from './dto/signup.args';
 import { SignInPayload } from './dto/signin.type';
 import { SignInArgs } from './dto/signin.args';
+import { User } from './user.entity';
 
 @Injectable()
 export class AuthService {
@@ -13,6 +14,14 @@ export class AuthService {
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
   ) {}
+
+  async getCurrentUser(user: User): Promise<User> {
+    return await this.userRepository.findOne(user, {relations: ['posts']});
+  }
+
+  async getUsers(): Promise<User[]> {
+    return await this.userRepository.find({relations: ['posts']});
+  }
 
   async signIn(signInArgs: SignInArgs): Promise<SignInPayload> {
     const { email, password } = signInArgs.record;

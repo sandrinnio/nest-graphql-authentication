@@ -12,11 +12,15 @@ import { SignInArgs } from './dto/signin.args';
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Query(() => String)
+  @Query(() => User)
   @UseGuards(GqlAuthGuard)
-  hello(@CurrentUser() user: User) {
-    console.log('TCL: AuthResolver -> user', user);
-    return 'Hello';
+  getCurrentUser(@CurrentUser() user: User): Promise<User> {
+    return this.authService.getCurrentUser(user);
+  }
+
+  @Query(() => [User], { nullable: true })
+  getUsers(): Promise<User[]> {
+    return this.authService.getUsers();
   }
 
   @Mutation(() => SignInPayload, { nullable: true })

@@ -1,6 +1,7 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany } from 'typeorm';
 import { ObjectType, Field, ID, Int } from 'type-graphql';
 import { IsEmail, MinLength } from 'class-validator';
+import { Post } from '../posts/post.entity';
 
 @Entity()
 @Unique(['email'])
@@ -10,20 +11,24 @@ export class User extends BaseEntity {
   @Field(() => ID)
   id: string;
 
-  @Column({ nullable: true })
-  @Field({ nullable: true })
+  @Column()
+  @Field()
   name: string;
 
-  @Column({ nullable: true })
-  @Field(() => Int, { nullable: true })
+  @Column()
+  @Field(() => Int)
   age: number;
 
-  @Column({ type: 'varchar', length: 50, unique: true, nullable: true })
+  @Column({ type: 'varchar', length: 50, unique: true })
   @IsEmail()
-  @Field({ nullable: true })
+  @Field()
   email: string;
 
-  @Column({ nullable: true })
+  @Column()
   @MinLength(6)
   password: string;
+
+  @OneToMany(type => Post, post => post.author)
+  @Field(() => [Post], { nullable: true })
+  posts: Post[];
 }

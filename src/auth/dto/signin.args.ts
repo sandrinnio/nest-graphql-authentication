@@ -9,7 +9,6 @@ class SignInRecord {
   password: string;
 }
 
-// tslint:disable-next-line: max-classes-per-file
 @ArgsType()
 export class SignInArgs {
   @Field()

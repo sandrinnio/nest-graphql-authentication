@@ -3,13 +3,29 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+input CreatePostRecord {
+  title: String!
+  description: String!
+}
+
 type Mutation {
   signIn(record: SignInRecord!): SignInPayload
   signUp(record: SignUpRecord!): SignInPayload
+  deletePost(id: String!): String!
+  createPost(record: CreatePostRecord!): Post
+}
+
+type Post {
+  id: ID!
+  title: String!
+  description: String!
+  author: User!
 }
 
 type Query {
-  hello: String!
+  getCurrentUser: User!
+  getUsers: [User!]
+  getPosts: [Post!]
 }
 
 type SignInPayload {
@@ -31,7 +47,8 @@ input SignUpRecord {
 
 type User {
   id: ID!
-  name: String
-  age: Int
-  email: String
+  name: String!
+  age: Int!
+  email: String!
+  posts: [Post!]
 }
