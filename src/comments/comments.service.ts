@@ -12,7 +12,7 @@ export class CommentsService {
     private readonly commentRepository: CommentRepository,
   ) {}
 
-  async createComment(text: string, post: Post, user: User) {
+  async createComment(text: string, post: Post, user: User): Promise<Comment | null> {
 
     const comment = new Comment();
     comment.text = text;

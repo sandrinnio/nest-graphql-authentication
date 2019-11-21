@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Field, ID, ObjectType } from 'type-graphql';
 import { IsNotEmpty } from 'class-validator';
 import { Post } from '../posts/post.entity';
@@ -6,7 +6,7 @@ import { User } from '../auth/user.entity';
 
 @Entity()
 @ObjectType()
-export class Comment extends BaseEntity {
+export class Comment {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   id: string;

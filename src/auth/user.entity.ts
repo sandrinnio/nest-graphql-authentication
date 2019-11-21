@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany } from 'typeorm';
 import { ObjectType, Field, ID, Int } from 'type-graphql';
 import { IsEmail, MinLength } from 'class-validator';
 import { Post } from '../posts/post.entity';
@@ -7,7 +7,7 @@ import { Comment } from '../comments/comment.entity';
 @Entity()
 @Unique(['email'])
 @ObjectType()
-export class User extends BaseEntity {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   @Field(() => ID)
   id: string;

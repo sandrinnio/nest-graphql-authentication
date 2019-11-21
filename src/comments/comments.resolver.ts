@@ -22,7 +22,7 @@ export class CommentsResolver {
     createCommentArgs: CreateCommentArgs,
     @CurrentUser()
     user: User,
-  ): Promise<Comment> {
+  ): Promise<Comment | null> {
     try {
       const { text, postId } = createCommentArgs.record;
 

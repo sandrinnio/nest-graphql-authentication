@@ -2,10 +2,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from './user.repository';
-import { SignUpArgs } from './dto/signup.args';
 import { SignInPayload } from './dto/signin.type';
-import { SignInArgs } from './dto/signin.args';
 import { User } from './user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -15,19 +14,11 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async getCurrentUser(user: User): Promise<User> {
-    return await this.userRepository.findOne(user, {relations: ['posts', 'comments']});
-  }
+  async signIn(password: string, user: User): Promise<SignInPayload | null> {
 
-  async getUsers(): Promise<User[]> {
-    return await this.userRepository.find({relations: ['posts', 'comments']});
-  }
+    const match = await bcrypt.compare(password, user.password);
 
-  async signIn(signInArgs: SignInArgs): Promise<SignInPayload> {
-    const { email, password } = signInArgs.record;
-
-    const user = await this.userRepository.signIn(email, password);
-    if (!user) { throw new UnauthorizedException('Invalid Credentials'); }
+    if (!match) { throw new UnauthorizedException('Invalid Credentials'); }
 
     const payload = { id: user.id };
     const accessToken = await this.jwtService.sign(payload);
@@ -35,8 +26,17 @@ export class AuthService {
     return { accessToken, user };
   }
 
-  async signUp(signUpArgs: SignUpArgs): Promise<SignInPayload> {
-    const user = await this.userRepository.signUp(signUpArgs);
+  async signUp(name: string, email: string, age: number, password: string): Promise<SignInPayload | null> {
+
+    const salt = await bcrypt.genSalt(10);
+
+    const user = new User();
+    user.name = name;
+    user.email = email;
+    user.age = age;
+    user.password = await bcrypt.hash(password, salt);
+
+    await this.userRepository.save(user);
 
     const payload = { id: user.id };
     const accessToken = await this.jwtService.sign(payload);

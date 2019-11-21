@@ -1,5 +1,4 @@
 import { InputType, Field, ArgsType, ID } from 'type-graphql';
-import { Post } from '../../posts/post.entity';
 
 @InputType()
 class CreateCommentRecord {
