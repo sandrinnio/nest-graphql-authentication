@@ -16,11 +16,11 @@ export class AuthService {
   ) {}
 
   async getCurrentUser(user: User): Promise<User> {
-    return await this.userRepository.findOne(user, {relations: ['posts']});
+    return await this.userRepository.findOne(user, {relations: ['posts', 'comments']});
   }
 
   async getUsers(): Promise<User[]> {
-    return await this.userRepository.find({relations: ['posts']});
+    return await this.userRepository.find({relations: ['posts', 'comments']});
   }
 
   async signIn(signInArgs: SignInArgs): Promise<SignInPayload> {

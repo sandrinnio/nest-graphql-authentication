@@ -3,6 +3,18 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Comment {
+  id: ID!
+  text: String!
+  post: Post!
+  owner: User!
+}
+
+input CreateCommentRecord {
+  text: String!
+  postId: ID!
+}
+
 input CreatePostRecord {
   title: String!
   description: String!
@@ -13,6 +25,7 @@ type Mutation {
   signUp(record: SignUpRecord!): SignInPayload
   deletePost(id: String!): String!
   createPost(record: CreatePostRecord!): Post
+  createComment(record: CreateCommentRecord!): Comment!
 }
 
 type Post {
@@ -20,6 +33,7 @@ type Post {
   title: String!
   description: String!
   author: User!
+  comments: [Comment!]
 }
 
 type Query {
@@ -51,4 +65,5 @@ type User {
   age: Int!
   email: String!
   posts: [Post!]
+  comments: [Comment!]
 }

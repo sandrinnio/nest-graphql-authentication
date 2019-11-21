@@ -2,6 +2,7 @@ import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany }
 import { ObjectType, Field, ID, Int } from 'type-graphql';
 import { IsEmail, MinLength } from 'class-validator';
 import { Post } from '../posts/post.entity';
+import { Comment } from '../comments/comment.entity';
 
 @Entity()
 @Unique(['email'])
@@ -31,4 +32,8 @@ export class User extends BaseEntity {
   @OneToMany(type => Post, post => post.author)
   @Field(() => [Post], { nullable: true })
   posts: Post[];
+
+  @OneToMany(type => Comment, comment => comment.owner)
+  @Field(() => [Comment], { nullable: true })
+  comments: Comment[];
 }

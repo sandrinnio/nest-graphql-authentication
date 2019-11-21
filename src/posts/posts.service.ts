@@ -12,8 +12,12 @@ export class PostsService {
     private readonly postRepository: PostRepository,
   ) {}
 
-  async getPosts(): Promise<Post[]> {
-    return await this.postRepository.find({relations: ['author']});
+  async getPosts(): Promise<Post[] | null> {
+    return await this.postRepository.find({relations: ['author', 'comments']});
+  }
+
+  async getPost(id: string): Promise<Post | null> {
+    return await this.postRepository.findOne(id, {relations: ['author', 'comments']});
   }
 
   createPost(createPostArgs: CreatePostArgs, user: User): Promise<Post> {
