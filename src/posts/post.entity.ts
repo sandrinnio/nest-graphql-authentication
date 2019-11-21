@@ -21,7 +21,7 @@ export class Post {
   @Field()
   description: string;
 
-  @ManyToOne(type => User)
+  @ManyToOne(type => User, { onDelete: 'CASCADE' })
   @JoinColumn({ referencedColumnName: 'id'})
   @Field(() => User)
   author: User;

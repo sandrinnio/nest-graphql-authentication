@@ -38,4 +38,20 @@ export class CommentsResolver {
       return Promise.reject(error);
     }
   }
+
+  @Mutation(() => String, { nullable: true })
+  @UseGuards(GqlAuthGuard)
+  async deleteComment(
+    @Args('id')
+    id: string,
+    @CurrentUser()
+    user: User,
+  ): Promise<void> {
+    try {
+      await this.commentsService.deleteComment(id, user);
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentRepository } from './comment.repository';
 import { User } from '../auth/user.entity';
@@ -20,5 +20,15 @@ export class CommentsService {
     comment.post = post;
 
     return await this.commentRepository.save(comment);
+  }
+
+  async deleteComment(id: string, user: User): Promise<void> {
+    const comment = await this.commentRepository.findOne({ id, owner: user });
+
+    if (!comment) {
+      throw new InternalServerErrorException('Comment does not belongs to you');
+    }
+
+    await this.commentRepository.delete(comment.id);
   }
 }

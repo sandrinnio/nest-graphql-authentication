@@ -2,17 +2,15 @@ import { Resolver, Mutation, Args, Query } from '@nestjs/graphql';
 import { PostsService } from './posts.service';
 import { CreatePostArgs } from './dto/createpost.args';
 import { Post } from './post.entity';
-import { UseGuards, InternalServerErrorException } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/gql-auth.guard';
 import { CurrentUser } from '../auth/user.decorator';
 import { User } from '../auth/user.entity';
-import { PostRepository } from './post.repository';
 
 @Resolver('Posts')
 export class PostsResolver {
   constructor(
     private readonly postsService: PostsService,
-    private readonly postRepository: PostRepository,
   ) {}
 
   @Query(() => [Post])
@@ -37,15 +35,9 @@ export class PostsResolver {
 
   @Mutation(() => String, { nullable: true })
   @UseGuards(GqlAuthGuard)
-  async deletePost(@Args('id') id: string, @CurrentUser() user: User): Promise<void | null> {
+  async deletePost(@Args('id') id: string, @CurrentUser() user: User): Promise<void> {
     try {
-      const post = await this.postRepository.findOne({ id, author: user });
-
-      if (!post) {
-        throw new InternalServerErrorException('This post does not belongs to you');
-      }
-
-      await this.postRepository.delete(post.id);
+      await this.postsService.deletePost(id, user);
     } catch (error) {
       console.log(error);
       return Promise.reject(error);

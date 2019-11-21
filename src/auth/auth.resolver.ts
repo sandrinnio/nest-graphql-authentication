@@ -38,6 +38,17 @@ export class AuthResolver {
     }
   }
 
+  @Mutation(() => String, { nullable: true })
+  @UseGuards(GqlAuthGuard)
+  async deleteUser(@CurrentUser() user: User): Promise<void> {
+    try {
+      await this.authService.deleteUser(user);
+    } catch (error) {
+      console.log(error);
+      return Promise.reject(error);
+    }
+  }
+
   @Mutation(() => SignInPayload)
   async signIn(@Args() signInArgs: SignInArgs): Promise<SignInPayload | null> {
     try {

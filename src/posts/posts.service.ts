@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostRepository } from './post.repository';
 import { Post } from './post.entity';
@@ -17,6 +17,16 @@ export class PostsService {
 
   async getPost(id: string): Promise<Post | null> {
     return await this.postRepository.findOne(id, {relations: ['author', 'comments']});
+  }
+
+  async deletePost(id: string, user: User): Promise<void> {
+    const post = await this.postRepository.findOne({ id, author: user });
+
+    if (!post) {
+      throw new InternalServerErrorException('This post does not belongs to you');
+    }
+
+    await this.postRepository.delete(post.id);
   }
 
   async createPost(title: string, description: string, user: User): Promise<Post | null> {
