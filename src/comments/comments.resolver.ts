@@ -28,10 +28,6 @@ export class CommentsResolver {
 
       const post = await this.postsService.getPost(postId);
 
-      if (!post) {
-        throw new NotFoundException('Post not found');
-      }
-
       return await this.commentsService.createComment(text, post, user);
     } catch (error) {
       console.log(error);
@@ -39,16 +35,17 @@ export class CommentsResolver {
     }
   }
 
-  @Mutation(() => String, { nullable: true })
+  @Mutation(() => Boolean, { nullable: true })
   @UseGuards(GqlAuthGuard)
   async deleteComment(
     @Args('id')
     id: string,
     @CurrentUser()
     user: User,
-  ): Promise<void> {
+  ): Promise<boolean> {
     try {
       await this.commentsService.deleteComment(id, user);
+      return true;
     } catch (error) {
       console.log(error);
       return Promise.reject(error);

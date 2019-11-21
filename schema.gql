@@ -21,13 +21,13 @@ input CreatePostRecord {
 }
 
 type Mutation {
-  deleteUser: String
+  deleteUser: Boolean
   signIn(record: SignInRecord!): SignInPayload!
   signUp(record: SignUpRecord!): SignInPayload!
-  deletePost(id: String!): String
+  deletePost(id: String!): Boolean
   createPost(record: CreatePostRecord!): Post!
   createComment(record: CreateCommentRecord!): Comment!
-  deleteComment(id: String!): String
+  deleteComment(id: String!): Boolean
 }
 
 type Post {

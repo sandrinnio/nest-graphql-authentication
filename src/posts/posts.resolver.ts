@@ -35,11 +35,12 @@ export class PostsResolver {
     }
   }
 
-  @Mutation(() => String, { nullable: true })
+  @Mutation(() => Boolean, { nullable: true })
   @UseGuards(GqlAuthGuard)
-  async deletePost(@Args('id') id: string, @CurrentUser() user: User): Promise<void> {
+  async deletePost(@Args('id') id: string, @CurrentUser() user: User): Promise<boolean> {
     try {
       await this.postsService.deletePost(id, user);
+      return true;
     } catch (error) {
       console.log(error);
       return Promise.reject(error);

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from './user.repository';
@@ -45,6 +45,12 @@ export class AuthService {
   }
 
   async deleteUser(user: User): Promise<void> {
+    const validUser = await this.userRepository.findOne(user.id);
+
+    if (!validUser) {
+      throw new NotFoundException('User not found');
+    }
+
     await this.userRepository.delete(user.id);
   }
 }

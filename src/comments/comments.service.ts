@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentRepository } from './comment.repository';
 import { User } from '../auth/user.entity';
@@ -22,7 +22,19 @@ export class CommentsService {
     return await this.commentRepository.save(comment);
   }
 
+  async getComment(id: string): Promise<Comment> {
+    const comment = await this.commentRepository.findOne(id, {relations: ['owner', 'post']});
+
+    if (!comment) {
+      throw new NotFoundException('Comment not found');
+    }
+
+    return comment;
+  }
+
   async deleteComment(id: string, user: User): Promise<void> {
+    await this.getComment(id);
+
     const comment = await this.commentRepository.findOne({ id, owner: user });
 
     if (!comment) {

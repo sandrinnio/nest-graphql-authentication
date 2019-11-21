@@ -37,11 +37,12 @@ export class AuthResolver {
     }
   }
 
-  @Mutation(() => String, { nullable: true })
+  @Mutation(() => Boolean, { nullable: true })
   @UseGuards(GqlAuthGuard)
-  async deleteUser(@CurrentUser() user: User): Promise<void> {
+  async deleteUser(@CurrentUser() user: User): Promise<boolean> {
     try {
       await this.authService.deleteUser(user);
+      return true;
     } catch (error) {
       console.log(error);
       return Promise.reject(error);
