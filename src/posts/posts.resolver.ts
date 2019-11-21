@@ -14,6 +14,7 @@ export class PostsResolver {
   ) {}
 
   @Query(() => [Post])
+  @UseGuards(GqlAuthGuard)
   async getPosts(): Promise<Post[] | null> {
     try {
       return await this.postsService.getPosts();
@@ -24,6 +25,7 @@ export class PostsResolver {
   }
 
   @Query(() => Post)
+  @UseGuards(GqlAuthGuard)
   async getPost(@Args('id') id: string): Promise<Post | null> {
     try {
       return await this.postsService.getPost(id);

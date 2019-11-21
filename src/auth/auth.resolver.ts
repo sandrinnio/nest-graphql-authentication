@@ -28,7 +28,6 @@ export class AuthResolver {
   }
 
   @Query(() => [User])
-  @UseGuards(GqlAuthGuard)
   async getUsers(): Promise<User[] | null> {
     try {
       return await this.userRepository.find({relations: ['posts', 'comments']});
